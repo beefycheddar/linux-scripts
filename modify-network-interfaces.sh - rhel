@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Define the filename
+config_file="/etc/sysconfig/network-scripts/ifcfg-ens33"
+interface_name="ens33"
+new_interface_name="ducky123"
+gateway="10.2.179.254"
+
+# Function to revert changes
+revert_changes() {
+    sed -i "s/DEVICE=$new_interface_name/DEVICE=$interface_name/" "$config_file"
+    sed -i "s/NAME=$new_interface_name/NAME=$interface_name/" "$config_file"
+    systemctl restart network
+    echo "Changes reverted."
+    exit 1
+}
+
+# Check if the file exists
+if [ ! -f "$config_file" ]; then
+    echo "Error: $config_file does not exist."
+    exit 1
+fi
+
+# Debug: Print the contents of the file before modification
+echo "Contents of $config_file before modification:"
+cat "$config_file"
+
+# Modify the network interface name
+sed -i "s/DEVICE=$interface_name/DEVICE=$new_interface_name/" "$config_file"
+sed -i "s/NAME=$interface_name/NAME=$new_interface_name/" "$config_file"
+
+# Debug: Print the contents of the file after modification
+echo "Contents of $config_file after modification:"
+cat "$config_file"
+
+# Restart network service
+systemctl restart network
+echo "Network interface name has been updated to $new_interface_name."
+
+# Ping the gateway
+echo "Pinging gateway $gateway..."
+ping -c 5 "$gateway"
+if [ $? -ne 0 ]; then
+    echo "Ping to gateway failed. Reverting changes..."
+    revert_changes
+fi
+
+echo "Ping to gateway successful."
