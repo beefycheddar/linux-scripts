@@ -1,0 +1,51 @@
+#!/bin/bash
+#written by ChatGPT for brett gavin
+#this is for ubuntu distros with Netplan
+#this script will update the interface name in the 00-installer-config.yaml file and apply the changes. it will revert if the gateway is not pingable.
+
+
+
+
+# Define the filename
+config_file="/etc/netplan/00-installer-config.yaml"
+gateway="10.2.179.254"
+
+# Function to revert changes
+revert_changes() {
+    sed -i 's/ducky123/ens33/' "$config_file"
+    netplan apply
+    echo "Changes reverted."
+    exit 1
+}
+
+# Check if the file exists
+if [ ! -f "$config_file" ]; then
+    echo "Error: $config_file does not exist."
+    exit 1
+fi
+
+# Debug: Print the contents of the file before modification
+echo "Contents of $config_file before modification:"
+cat "$config_file"
+
+# Modify the network interface name to "ducky123"
+sed -i 's/ens33/ducky123/' "$config_file"
+
+# Debug: Print the contents of the file after modification
+echo "Contents of $config_file after modification:"
+cat "$config_file"
+
+# Apply the changes
+netplan apply
+
+echo "Network interface name has been updated to ducky123."
+
+# Ping the gateway
+echo "Pinging gateway $gateway..."
+ping -c 5 "$gateway"
+if [ $? -ne 0 ]; then
+    echo "Ping to gateway failed. Reverting changes..."
+    revert_changes
+fi
+
+echo "Ping to gateway successful."
