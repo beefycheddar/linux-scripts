@@ -2,7 +2,7 @@
 #written by ChatGPT for brett gavin
 #this is for RHEL
 #this script will update the interface name in the network-scripts folder and apply the changes. it will revert if the gateway is not pingable.
-#UNTESTED
+
 
 
 
