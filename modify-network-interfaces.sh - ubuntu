@@ -12,7 +12,7 @@ gateway="10.2.179.254"
 
 # Function to revert changes
 revert_changes() {
-    sed -i 's/ducky123/ens33/' "$config_file"
+    sed -i 's/eth0/ens33/' "$config_file"
     netplan apply
     echo "Changes reverted."
     exit 1
@@ -28,8 +28,8 @@ fi
 echo "Contents of $config_file before modification:"
 cat "$config_file"
 
-# Modify the network interface name to "ducky123"
-sed -i 's/ens33/ducky123/' "$config_file"
+# Modify the network interface name to "eth0"
+sed -i 's/ens33/eth0/' "$config_file"
 
 # Debug: Print the contents of the file after modification
 echo "Contents of $config_file after modification:"
@@ -38,7 +38,7 @@ cat "$config_file"
 # Apply the changes
 netplan apply
 
-echo "Network interface name has been updated to ducky123."
+echo "Network interface name has been updated to eth0."
 
 # Ping the gateway
 echo "Pinging gateway $gateway..."
