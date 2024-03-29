@@ -10,7 +10,7 @@
 # Define the filename
 config_file="/etc/sysconfig/network-scripts/ifcfg-ens33"
 interface_name="ens33"
-new_interface_name="ducky123"
+new_interface_name="eth0"
 gateway="10.2.179.254"
 
 # Function to revert changes
